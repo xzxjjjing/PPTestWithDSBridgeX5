@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>jsbridge test</title>
+		<link href="index.css"  type="text/css"  rel="stylesheet" />
+		<script src="dsbridge.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="title_TTS">
+				<h3>文字转语音模块</h3>
+				<div class="input_group">
+					<input type="button" class="ig" id="enter1" value="播放语音" onclick="readText()">
+				</div>
+				<div>
+					<h5 id="showmsg"></h5>
+				</div>
+			</div>
+			<div class="title_parse">
+				<h3>解析数据模块</h3>
+				<div class="input_group">
+					<input type="button" class="ig2" id="enter4" value="解析数据" onclick="parseToJson()"/>
+				</div>
+				<div>
+					<h5 id="showmsg1"></h5>
+				</div>
+			</div>
+			<div class="title_getInfo">
+				<h3>获取信息模块</h3>
+				<div class="input_group">
+					<input type="button" class="ig2" id="enter5" value="获取信息" onclick="getSomeInfo()"/>
+				</div>
+				<div>
+					<h5 id="showmsg2"></h5>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			//文字转语音模块，asyn
+			function readText(){
+
+				dsBridge.call(
+				    'convertTextToSpeech',
+				    {'param':'readTextOneLine'},
+				    function(responseData){//responseData应该是java返回的数据，android回传的一些数据，我显示到页面上
+						var jsonObj = JSON.parse(responseData);
+						document.getElementById("showmsg").innerHTML = responseData;
+				    }
+				);
+			}
+
+			//测试DSBridge的简单调用，同步
+			function testDSBridgeSyn(){
+
+				var str = dsBridge.call("testSyn", "testSyn");
+				document.getElementById("showmsg").innerHTML = str;
+			}
+			//测试DSBridge的简单调用，异步
+			function testDSBridgeAsyn(){
+
+				dsBridge.call("testAsyn", "testAsyn", function(v){
+					document.getElementById("showmsg").innerHTML = v;
+				});
+			}
+
+			//parse data into json-files, asyn
+			function parseToJson(){
+				dsBridge.call(
+				    'parseDataToJson',
+				    {'param':'parseData'},
+				    function(responseData){
+						var jsonObj = JSON.parse(responseData);
+						document.getElementById("showmsg1").innerHTML = jsonObj.state;
+				    }
+				);
+			}
+
+			//获取一些信息，对x5的使用做一些了解
+			function getSomeInfo(){
+				dsBridge.call(
+					'getInfo',
+					'',
+					function(responseData){
+						document.getElementById("showmsg2").innerHTML = responseData;
+					}
+				);
+			}
+		</script>
+	</body>
+</html>
